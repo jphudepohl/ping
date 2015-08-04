@@ -73,8 +73,8 @@ PingServer::onInterest(const Interest& interest)
 
   shared_ptr<Data> data;
   
-  // if data pre-generated
-  if (m_options.preGenerate) {
+  // if data shoudl be pre-generated
+  if (m_options.shouldPreGenerate) {
     // populate data array if first time
     if (m_firstInterest) {
       generateDataPackets(interestName);
@@ -83,6 +83,12 @@ PingServer::onInterest(const Interest& interest)
     // get data out of array
     data = m_dataArray[m_currentDataNum];
     ++m_currentDataNum;
+    // shut down server if used all pre-generated data packets
+    if (m_currentDataNum >= m_options.nPreGenerate) {
+      std::cout << "Used all pre-generated data packets. Shutting down server." << std::endl;
+      m_face.shutdown();
+      m_face.getIoService().stop();
+    }
   }
   // make and sign data at runtime
   else {
@@ -117,7 +123,7 @@ PingServer::generateDataPackets(Name interestName)
   std::string seqStr = name.substr(delimiter+1);
   uint64_t seq = std::stoull(seqStr);
 
-  for (int i = 0; i < m_nDataPackets; i++) 
+  for (int i = 0; i < m_options.nPreGenerate; i++) 
   {
     Name dataName = Name(prefix);
     dataName.append(std::to_string(seq)); // add sequence number to name

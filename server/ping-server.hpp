@@ -40,7 +40,8 @@ struct Options
   int nMaxPings;                      //!< max number of pings to satisfy
   bool shouldPrintTimestamp;          //!< print timestamp when response sent
   int payloadSize;                    //!< user specified payload size
-  bool preGenerate;                   //!< generate data packets in advance
+  bool shouldPreGenerate;             //!< should generate data packets in advance
+  int nPreGenerate;                   //!< number of data packets to generate in advance
 };
 
 /**
@@ -109,8 +110,7 @@ private:
 
   /* make and sign data packets in advance */
   bool m_firstInterest; // signals if first interest server received
-  static const int m_nDataPackets = 100; // number of data packets to make in advance
-  shared_ptr<Data> m_dataArray [m_nDataPackets]; // store pre-generated data packets
+  shared_ptr<Data> m_dataArray [1000]; // store pre-generated data packets
   int m_currentDataNum; // current place in array
 };
 

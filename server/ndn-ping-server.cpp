@@ -87,7 +87,8 @@ main(int argc, char* argv[])
   options.nMaxPings = 0;
   options.shouldPrintTimestamp = false;
   options.payloadSize = 0;
-  options.preGenerate = false;
+  options.shouldPreGenerate = false;
+  options.nPreGenerate = -1;
 
   namespace po = boost::program_options;
 
@@ -101,7 +102,7 @@ main(int argc, char* argv[])
     ("satisfy,p", po::value<int>(&options.nMaxPings), "set maximum number of pings to be satisfied")
     ("timestamp,t", "log timestamp with responses")
     ("size,s", po::value<int>(&options.payloadSize), "specify size of response payload")
-    ("advance,a", "make and sign data packets in advance")
+    ("advance,a", po::value<int>(&options.nPreGenerate), "set number of data packets to make and sign in advance")
   ;
   po::options_description hiddenOptDesc("Hidden options");
   hiddenOptDesc.add_options()
@@ -167,7 +168,12 @@ main(int argc, char* argv[])
     }
 
     if (optVm.count("advance") > 0) {
-      options.preGenerate = true;
+      options.shouldPreGenerate = true;
+
+      if (options.nPreGenerate < 1 || options.nPreGenerate > 1000) {
+        std::cerr << "ERROR: Number of data packets to generate in advance must be greater than 0 and less than or equal to 1000" << std::endl;
+        usage(visibleOptDesc);
+      }
     }
   }
   catch (const po::error& e) {
