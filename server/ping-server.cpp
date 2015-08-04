@@ -77,18 +77,15 @@ PingServer::onInterest(const Interest& interest)
   if (m_options.preGenerate) {
     // populate data array if first time
     if (m_firstInterest) {
-      std::cout << "populate data array" << std::endl;
       generateDataPackets(interestName);
       m_firstInterest = false;
     }
     // get data out of array
-    std::cout << "from array" << std::endl;
     data = m_dataArray[m_currentDataNum];
     ++m_currentDataNum;
   }
   // make and sign data at runtime
   else {
-    std::cout << "made at runtime" << std::endl;
     data = make_shared<Data>(interestName);
     data->setFreshnessPeriod(m_options.freshnessPeriod);
     data->setContent(m_payload);
@@ -122,8 +119,6 @@ PingServer::generateDataPackets(Name interestName)
 
   for (int i = 0; i < m_nDataPackets; i++) 
   {
-    std::cout << i << std::endl;
-
     Name dataName = Name(prefix);
     dataName.append(std::to_string(seq)); // add sequence number to name
     
