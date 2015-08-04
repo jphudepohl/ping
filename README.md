@@ -1,7 +1,7 @@
 # ndnping and ndnpingserver
 
 ## Credits
-The majority of this code is not my own. Please see https://github.com/named-data/ndn-tools/tree/master/tools/ping for the original code and install instructions. I added a command line option to make and sign data packets in advance. This can be accessed by running the ndnpingserver with the `-a` flag. For example:
+The majority of this code is not my own. Please see https://github.com/named-data/ndn-tools/tree/master/tools/ping for the original code and install instructions. I added a command line option to make and sign data packets in advance. Signing data packets often takes a signicant amount of time (~4ms), so doing this in advance allows ndnping to produce a more accurate round trip time result. To use this feature, run the ndnpingserver with the `-a` flag. For example:
     
     ndnpingserver -a /ping
 
